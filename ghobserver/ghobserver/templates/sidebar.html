@@ -1,0 +1,14 @@
+<aside class="menu" style="border:0 !important">
+	<p class="menu-label">
+		<a href="/repositories" style="color:grey">Repositories</a>
+	</p>
+	<ul class="menu-list">
+		<li v-for="repo in repos">
+			<a v-bind:href="'/repository/'+repo.slug" 
+				v-html="repo.name"></a>
+		</li>
+	</ul>
+	<p class="menu-label">
+		<a href="/" style="color:grey">Activity</a>
+	</p>
+</aside>

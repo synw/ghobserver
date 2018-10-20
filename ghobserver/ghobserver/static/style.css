@@ -1,0 +1,38 @@
+.navbar {
+	background-color:steelblue;
+}
+.navbar-brand .navbar-item, .navbar-brand a {
+	color:white !important;
+}
+.content {
+	margin:1em;
+}
+#sidebar {
+	margin-top:1em;
+}
+.hidden {
+	position: absolute;
+	top: -9999px;
+	left: -9999px;
+}
+.upspace {
+	margin-top:1em;
+}
+.panelhead {
+	font-weight:bold;
+	background-color:#30A2DA;
+	color:white;
+}
+.picon {
+	color:#9C9C9C;
+	margin-right:0.3em;
+}
+.lm05 {
+	margin-left:0.8em
+}
+.activity a, .activity a:visited {
+	color:black
+}
+.avatar {
+	display:inline-block;
+}

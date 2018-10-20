@@ -1,0 +1,64 @@
+<nav class="panel" style="margin-top:0.6em" v-if="activeView.slug === 'repositories'">
+	<div class="panel-heading panelhead" v-html="activeRepo.name"></div>
+	<div class="panel-block">
+		<b-tooltip label="Commits"
+            type="is-light"
+            position="is-bottom">
+			<i class="fas fa-coins picon" aria-hidden="true"></i>
+        </b-tooltip>{! repoInfos.CommitsCount !}
+        <b-tooltip label="Last commit date"
+            type="is-light"
+            position="is-bottom">
+			<i class="fas fa-clock picon lm05" aria-hidden="true"></i>
+        </b-tooltip>{! repoInfos.PushedAt !}
+	</div>
+	<div class="panel-block">
+		<b-tooltip label="Disk usage"
+            type="is-light"
+            position="is-bottom">
+			<i class="fas fa-hdd picon" aria-hidden="true"></i>
+        </b-tooltip>{! repoInfos.DiskUsage !}
+		<b-tooltip label="Issues"
+            type="is-light"
+            position="is-bottom">
+			<i class="fas fa-question-circle picon lm05" aria-hidden="true"></i>
+        </b-tooltip>{! repoInfos.IssuesCount !}
+        <b-tooltip label="Pull requests"
+            type="is-light"
+            position="is-bottom">
+			<i class="fas fa-download picon lm05" aria-hidden="true"></i>
+        </b-tooltip>{! repoInfos.PullRequestsCount !}
+        <b-tooltip label="Releases"
+            type="is-light"
+            position="is-bottom">
+			<i class="fas fa-bookmark picon lm05" aria-hidden="true"></i>
+        </b-tooltip>{! repoInfos.ReleasesCount !}
+	</div>
+	<div class="panel-block">
+        <b-tooltip label="Stars"
+            type="is-light"
+            position="is-bottom">
+			<i class="fas fa-star picon" aria-hidden="true"></i>
+        </b-tooltip>{! repoInfos.StarsCount !}
+        <b-tooltip label="Forks"
+            type="is-light"
+            position="is-bottom">
+			<i class="fas fa-code-branch picon lm05" aria-hidden="true"></i>
+        </b-tooltip>{! repoInfos.ForksCount !}
+        <b-tooltip label="Watchers"
+            type="is-light"
+            position="is-bottom">
+			<i class="fas fa-eye picon lm05" aria-hidden="true"></i>
+        </b-tooltip>{! repoInfos.WatchersCount !}
+        <b-tooltip label="Collaborators"
+            type="is-light"
+            position="is-bottom">
+			<i class="fas fa-user-cog picon lm05" aria-hidden="true"></i>
+        </b-tooltip>{! repoInfos.CollaboratorsCount !}
+        <b-tooltip label="Users that participated"
+            type="is-light"
+            position="is-bottom">
+			<i class="fas fa-user-friends picon lm05" aria-hidden="true"></i>
+        </b-tooltip>{! repoInfos.MentionableUsersCount !}
+	</div>
+</nav>

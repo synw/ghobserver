@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Github observer</title>
+    {{template "head.html" .}}
+</head>
+
+<body>
+<div id="app">
+	<div class="container-fluid">
+		{{template "content.html" .}}
+	</div>
+</div>
+<script src="/static/app.js"></script>
+<script>
+	app.repos = [{{range .Repos}}{"slug": "{{.Slug}}", "name": "{{.Name}}", "url":"{{.Url}}"},{{end}}];
+	app.activity = [{{range .Activity}}{"title": "{{.Title}}", "content": "{{.Content}}", "link":"{{.Link}}", "date":"{{.Updated}}"},{{end}}];
+</script>
+<script src="/static/routes.js"></script>
+</body>
+</html>

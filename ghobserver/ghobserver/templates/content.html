@@ -1,0 +1,48 @@
+<div class="columns">
+	<div class="column is-10 content">
+		<div class="columns">
+			<div class="column is-3">
+				{{template "panel.html" .}}
+				{{template "activity_panel.html" .}}
+				<iframe id="ifSidebar" v-bind:src="sidebarSrc"
+                		scrolling="no" 
+                		style="width:100% !important; padding:0; border:0; height:300px;
+                				margin-left:-1em">
+                </iframe>
+			</div>
+			<div class="column is-9">
+				<div class="tabs" v-if="activeView.slug === 'repositories'">
+					<ul>
+						<li v-bind:class="{ 'is-active': activeTimeframe == 'all' }">
+							<a @click="loadContentView(activeRepo, 'all')">All</a>
+						</li>
+						<li v-bind:class="{ 'is-active': activeTimeframe == '3Y' }">
+							<a @click="loadContentView(activeRepo, '3Y')">3 years</a>
+						</li>
+						<li v-bind:class="{ 'is-active': activeTimeframe == '1Y' }">
+							<a @click="loadContentView(activeRepo, '1Y')">1 year</a>
+						</li>
+						<li v-bind:class="{ 'is-active': activeTimeframe == '3M' }">
+							<a @click="loadContentView(activeRepo, '3M')">3 months</a>
+						</li>
+						<li v-bind:class="{ 'is-active': activeTimeframe == '3W' }">
+							<a @click="loadContentView(activeRepo, '3W')">3 weeks</a>
+						</li>
+						<li v-bind:class="{ 'is-active': activeTimeframe == '1W' }">
+							<a @click="loadContentView(activeRepo, '1W')">1 week</a>
+						</li>
+					</ul>
+				</div>
+				<div v-if="activeView.slug === 'activity'">
+					{{template "activity.html" .}}
+				</div>
+				<iframe id="ifContent"
+                		style="width:100% !important; padding:0; border:0; height:800px;">
+                </iframe>
+			</div>
+		</div>
+	</div>
+	<div id="sidebar" class="column is-2">
+		{{template "sidebar.html" .}}
+	</div>
+</div>

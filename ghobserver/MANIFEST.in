@@ -1,0 +1,2 @@
+recursive-include ghobserver/static *
+recursive-include ghobserver/templates *

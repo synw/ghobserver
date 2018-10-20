@@ -1,0 +1,7 @@
+<link crossorigin="anonymous" media="all" integrity="sha512-FCg44VGg5ax/5MpZ8otwiPE+/tG1/Sq67mKkl6agbqgoScZtJyXhQSFQMIJfOHMZZ+yXDINb8nEiws60SiLohg==" rel="stylesheet" href="https://assets-cdn.github.com/assets/frameworks-5aa6d9885579bb2359f66266aee26f3b.css" />
+<div v-for="act in activity" class="activity" style="margin-top:0.6em">
+	<a v-bind:href="act.link">
+		<span v-html="act.title+' '+timeSince(act.date)"></span>
+	</a>
+	<div v-html="act.content"></div>
+</div>
