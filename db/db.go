@@ -118,18 +118,18 @@ func SaveFeedUrl(user *User, url string) {
 	}
 }
 
-func GetDashboardsToUpdate() []string {
+func GetDashboardsToUpdate() ([]string, *terr.Trace) {
 	results, err := engine.QueryString("SELECT repository.name FROM result JOIN repository ON result.repo_id = repository.id")
-	if err != nil {
-		tr := terr.New(err)
-		tr = tr.Add("Can not select dashboards to update")
-		tr.Fatal()
-	}
 	var repos []string
+	if err != nil {
+		tr := terr.New("Can not select dashboards to update: " + err.Error())
+		return repos, tr
+	}
 	for _, repo := range results {
 		repos = append(repos, repo["name"])
 	}
-	return repos
+	terr.Debug(repos)
+	return repos, nil
 }
 
 func GetActivity() []Activity {
@@ -211,20 +211,6 @@ func CheckRepos(repos []string, user *User, dbpath string, apikey string) {
 			exe.UpdateRepo(r, user.Name, dbpath, apikey)
 		}
 	}
-}
-
-func HasResults() (bool, *terr.Trace) {
-	hasRes := false
-	var res Result
-	counts, err := engine.Count(res)
-	if err != nil {
-		tr := terr.New(err)
-		return hasRes, tr
-	}
-	if counts > 0 {
-		hasRes = true
-	}
-	return hasRes, nil
 }
 
 func insertRepoIfNotExists(reponame string, userid int64) (bool, *terr.Trace) {

@@ -7,8 +7,6 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/synw/terr"
-
 	"github.com/synw/ghobserver/activity"
 	"github.com/synw/ghobserver/conf"
 	"github.com/synw/ghobserver/db"
@@ -63,17 +61,18 @@ func update(pypath string, dbpath string, apikey string, noUpdate bool, user *db
 				fmt.Println(msg)
 			}
 		}
-		hasRes, tr := db.HasResults()
+		// run data pipeline
+		updateList, tr := db.GetDashboardsToUpdate()
 		if tr != nil {
+			tr.Add("Can not get dashboards to udpate")
 			tr.Fatal()
 		}
-		if hasRes == false {
+		if len(updateList) == 0 {
 			log.Print("Nothing changed")
 		} else {
-			// run data pipeline
+			// update dashboards
 			var strli string
-			updatelist := db.GetDashboardsToUpdate()
-			for _, reponame := range updatelist {
+			for _, reponame := range updateList {
 				strli = strli + " " + reponame
 			}
 			log.Print("Updating dashboard for" + strli)
@@ -82,11 +81,12 @@ func update(pypath string, dbpath string, apikey string, noUpdate bool, user *db
 				tr.Check()
 			}
 			if msg != "ok" {
-				tr := terr.New("Error running the data pipeline:\n" + msg)
+				tr := tr.Add("Error running the data pipeline:\n" + msg)
 				tr.Fatal()
 			}
 			log.Print("Dashboard updated")
 		}
+		//}
 		time.Sleep(10 * time.Minute)
 	}
 }

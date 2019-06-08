@@ -8,7 +8,7 @@ notebooks
 .settings
 coverage_html_report/
 *.OLD
-ghobserver/static/charts/*
+ghobserver/ghobserver/static/charts/*
 
 __pycache__/
 *.py[cod]

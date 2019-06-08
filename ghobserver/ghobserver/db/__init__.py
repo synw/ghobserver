@@ -1,6 +1,7 @@
 import sqlite3
 import pandas as pd
 from goerr import Err
+from _sqlite3 import IntegrityError
 
 err = Err()
 DB = None
@@ -95,8 +96,11 @@ def save_commits(repoid, commits):
         c = DB.cursor()
         q = "INSERT INTO gh_commit(message, author, date, hash, url, " + \
             "repository, changed_files, additions, deletions) VALUES (?,?,?,?,?,?,?,?,?)"
-        c.executemany(q, commits_generator())
-        DB.commit()
+        try:
+            c.executemany(q, commits_generator())
+            DB.commit()
+        except IntegrityError:
+            err.warning("Duplicated record")
     except Exception as e:
         err.new(e)
 

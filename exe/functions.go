@@ -1,7 +1,6 @@
 package exe
 
 import (
-	//"fmt"
 	"github.com/synw/terr"
 )
 
@@ -10,7 +9,7 @@ func RunPipeline(path string, dbpath string) (string, *terr.Trace) {
 	cmd := "run pipeline"
 	out, tr := Exec(cmd, path+"/pipeline.py", dbpath, "nodebug")
 	if tr != nil {
-		tr = tr.Pass()
+		tr = tr.Add("Can not run data pipeline")
 	}
 	return out, tr
 }
