@@ -1,14 +1,13 @@
-Monitor your Github data. This program fetches commits data for selected repositories at regular interval and
-make charts with it. Features:
+# Ghobserver
 
-- **Own** your data: your Github data lives in a local Sqlite database
-- **View** your data with charts
+Monitor Github repositories data. This program fetches commits data for selected repositories at regular interval and make charts with it. Features:
+
+- **View** repositories data with charts
 - Desktop **notifications** on change
 
 ## How it works
 
-The data is pulled from Github at regular interval from their api. It is stored in an Sqlite database. Charts are
-generated for each repository.
+The data is pulled from Github at regular interval from their api. It is stored in an Sqlite database. Charts are generated for each repository.
 
 **Note**: this program is made to be run locally
 
@@ -16,10 +15,10 @@ generated for each repository.
 
 Install the python module:
 
-   ```
+   ```bash
    pip install ghobserver
    ```
-   
+
 Grab the binary release or compile from source.
 
 Edit a `config.json` file next to the binary:
@@ -29,10 +28,11 @@ Edit a `config.json` file next to the binary:
 "user": "github_username",
 "pwd": "github_password",
 "token": "github_personal_api_token",
-"repositories": ["repo1", "repo2", "repo3"]
+"repositories": ["repo1", "repo2", "repo3"],
+"external_repositories": ["username/reponame", "username/reponame"]
 }
    ```
-   
+
 To get a personal api token check the [instructions](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/)
 
 Activate your python virtualenv if needed and run: `./ghobserver`
