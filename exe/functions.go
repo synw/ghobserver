@@ -35,7 +35,7 @@ func UpdateRepo(reponame string, username string, dbpath string, apikey string) 
 }
 
 func UpdateCommits(path string, dbpath string, apikey string) (string, *terr.Trace) {
-	// update all repositories commut history
+	// update all repositories commit history
 	cmd := "update commits"
 	args := []string{path + "/update_commits.py", dbpath, apikey, "no_debug"}
 	out, tr := Exec(cmd, args...)

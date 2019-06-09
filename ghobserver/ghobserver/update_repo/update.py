@@ -17,9 +17,11 @@ def get_repo_data(reponame, username, apikey):
         res["license"] = data["data"]["repository"]["licenseInfo"]["name"]
     except TypeError:
         res["license"] = ""
-    res["commitsCount"] = data["data"]["repository"]["object"]["history"]["totalCount"]
+    res["commitsCount"] = \
+        data["data"]["repository"]["object"]["history"]["totalCount"]
     res["url"] = data["data"]["repository"]["url"]
-    res["primaryLanguage"] = data["data"]["repository"]["primaryLanguage"]["name"]
+    res["primaryLanguage"] = \
+        data["data"]["repository"]["primaryLanguage"]["name"]
     res["pushedAt"] = data["data"]["repository"]["pushedAt"]
     try:
         res["readmeSize"] = data["data"]["repository"]["readme"]["byteSize"]
@@ -29,7 +31,14 @@ def get_repo_data(reponame, username, apikey):
     res["stars"] = data["data"]["repository"]["stargazers"]["totalCount"]
     res["watchers"] = data["data"]["repository"]["watchers"]["totalCount"]
     res["issues"] = data["data"]["repository"]["issues"]["totalCount"]
-    res["pullRequests"] = data["data"]["repository"]["pullRequests"]["totalCount"]
-    res["mentionableUsers"] = data["data"]["repository"]["mentionableUsers"]["totalCount"]
-    res["collaborators"] = data["data"]["repository"]["collaborators"]["totalCount"]
+    res["pullRequests"] = \
+        data["data"]["repository"]["pullRequests"]["totalCount"]
+    res["mentionableUsers"] = \
+        data["data"]["repository"]["mentionableUsers"]["totalCount"]
+    # must have push access to view collaborators
+    try:
+        res["collaborators"] = \
+            data["data"]["repository"]["collaborators"]["totalCount"]
+    except Exception:
+        res["collaborators"] = 0
     return res

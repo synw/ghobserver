@@ -55,7 +55,8 @@ def update_repo_commits(repoid, reponame, owner, date, message, apikey):
                 reponame, owner, apikey, FETCH_SLICE, end_cursor)
         else:
             last_update, records, has_next_page, end_cursor = api.get_commits(
-                reponame, owner, apikey, FETCH_SLICE, since=get_start_date(date))
+                reponame, owner, apikey, FETCH_SLICE,
+                since=get_start_date(date))
         i = len(records)
         if i > 0:
             msg("Fetched", i, "records, saving")
@@ -86,13 +87,16 @@ def run(dbpath, apikey):
         owner = last_commit["owner"]
         if last_commit["last_commit_date"] is None:
             msg("Initializing commits for repository " + reponame)
-            res[repoid], last_update = init_repo(repoid, reponame, owner, apikey)
+            res[repoid], last_update = init_repo(repoid, reponame,
+                                                 owner, apikey)
         else:
-            res[repoid], last_update = update_repo_commits(repoid, reponame, owner,
-                        last_commit["last_commit_date"],
-                        last_commit["message"],
-                        apikey
-                        )
+            res[repoid], last_update = \
+                update_repo_commits(repoid, reponame,
+                                    owner,
+                                    last_commit["last_commit_date"],
+                                    last_commit["message"],
+                                    apikey
+                                    )
         # update repo info if needed
         if last_update != last_commit["last_update"]:
             msg("Updating repository info for " + reponame)
@@ -100,7 +104,7 @@ def run(dbpath, apikey):
             db.save_repo_info(reponame, data)
     db.save_results(res)
     print("ok")
-    
+
 
 try:
     _ = sys.argv[3]

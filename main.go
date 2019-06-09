@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/synw/ghobserver/activity"
@@ -12,10 +13,11 @@ import (
 	"github.com/synw/ghobserver/db"
 	"github.com/synw/ghobserver/exe"
 	"github.com/synw/ghobserver/server"
+	"github.com/synw/terr"
 )
 
 var initDb = flag.Bool("db", false, "Initialize the database and exit")
-var httpServer = flag.Bool("s", false, "Run the http server only")
+var httpServerOnly = flag.Bool("s", false, "Run the http server only")
 var dev = flag.Bool("d", false, "Run in developement mode")
 var noUpdate = flag.Bool("nu", false, "Do not update data from api")
 
@@ -30,19 +32,40 @@ func main() {
 	localpath, _ := filepath.Abs("./")
 	dbpath := localpath + "/ghobserver.db"
 	db.Init(dbpath)
-	username, pwd, apikey, repositories, tr := conf.GetConf()
+	username, pwd, apikey, repositories, externalRepositories, tr := conf.GetConf()
 	if tr != nil {
 		tr.Fatal()
 	}
+	// internal repos
 	user := db.GetOrCreateUser(username)
 	db.CheckRepos(repositories, user, dbpath, apikey)
 	if *initDb == true {
 		log.Print("Done")
 		return
 	}
-	if *httpServer == false {
+	var exrep = make(map[string][]string)
+	// get external repos
+	for _, addr := range externalRepositories {
+		li := strings.Split(addr, "/")
+		u := li[0]
+		rep := li[1]
+		_, has := exrep[u]
+		if has {
+			exrep[u] = append(exrep[u], rep)
+		} else {
+			exrep[u] = []string{rep}
+		}
+	}
+	// process external repos
+	for u, reps := range exrep {
+		exuser := db.GetOrCreateUser(u)
+		db.CheckRepos(reps, exuser, dbpath, apikey)
+	}
+	// update loop
+	if *httpServerOnly == false {
 		go update(pypath, dbpath, apikey, *noUpdate, user, pwd, staticPath)
 	}
+	// http
 	server.StartHttp(templatesPath, staticPath, *dev)
 }
 
@@ -81,7 +104,7 @@ func update(pypath string, dbpath string, apikey string, noUpdate bool, user *db
 				tr.Check()
 			}
 			if msg != "ok" {
-				tr := tr.Add("Error running the data pipeline:\n" + msg)
+				tr := terr.New("Error running the data pipeline:\n" + msg)
 				tr.Fatal()
 			}
 			log.Print("Dashboard updated")

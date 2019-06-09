@@ -27,8 +27,8 @@ def write_file(filepath, content):
 def no_data(ds, reposlug, timeframe):
     filename = reposlug.replace("-", "_") + "_" + timeframe + ".html"
     filepath = ds.report_path + "/" + filename
-    content = '<div style="font-family:arial;text-align:center;font-size:220%;' \
-              'color:lightgrey;margin-top:4em">'
+    content = '<div style="font-family:arial;text-align:center;' \
+              'font-size:220%;color:lightgrey;margin-top:4em">'
     content += 'No data'
     content += '</div>'
     ds.ok("Writing", filepath)
@@ -105,7 +105,7 @@ def run(dbpath, debug=True):
         ds.quiet = True
     modulepath = os.path.dirname(os.path.realpath(
         ghobserver.__file__))
-    #templates_path = modulepath + "/templates/charts"
+    # templates_path = modulepath + "/templates/charts"
     static_path = modulepath + "/static"
     repos = db.get_repos()
     ds.connect("sqlite:///" + dbpath)

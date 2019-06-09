@@ -128,7 +128,6 @@ func GetDashboardsToUpdate() ([]string, *terr.Trace) {
 	for _, repo := range results {
 		repos = append(repos, repo["name"])
 	}
-	terr.Debug(repos)
 	return repos, nil
 }
 
