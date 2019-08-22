@@ -25,19 +25,27 @@ func main() {
 	flag.Parse()
 	pypath, tr := exe.GetPath()
 	if tr != nil {
-		tr.Fatal()
+		tr.Fatal(tr.Error())
 	}
 	staticPath := pypath + "/static"
 	templatesPath := pypath + "/templates"
 	localpath, _ := filepath.Abs("./")
 	dbpath := localpath + "/ghobserver.db"
 	db.Init(dbpath)
-	username, pwd, apikey, repositories, externalRepositories, tr := conf.GetConf()
-	if tr != nil {
-		tr.Fatal()
+	username, pwd, apikey, repositories, externalRepositories, err := conf.GetConf()
+	if err != nil {
+		log.Fatal(err)
+		/*tr.Print()
+		fmt.Println("ERR " + tr.Error())
+		tr.Add("Can not get conf")
+		tr.Check()*/
+		return
 	}
 	// internal repos
-	user := db.GetOrCreateUser(username)
+	user, tr := db.GetOrCreateUser(username)
+	if tr != nil {
+		tr.Fatal(tr.Error())
+	}
 	db.CheckRepos(repositories, user, dbpath, apikey)
 	if *initDb == true {
 		log.Print("Done")
@@ -58,7 +66,10 @@ func main() {
 	}
 	// process external repos
 	for u, reps := range exrep {
-		exuser := db.GetOrCreateUser(u)
+		exuser, tr := db.GetOrCreateUser(u)
+		if tr != nil {
+			tr.Fatal(tr.Error())
+		}
 		db.CheckRepos(reps, exuser, dbpath, apikey)
 	}
 	// update loop
@@ -88,7 +99,7 @@ func update(pypath string, dbpath string, apikey string, noUpdate bool, user *db
 		updateList, tr := db.GetDashboardsToUpdate()
 		if tr != nil {
 			tr.Add("Can not get dashboards to udpate")
-			tr.Fatal()
+			tr.Fatal(tr.Error())
 		}
 		if len(updateList) == 0 {
 			log.Print("Nothing changed")
@@ -105,7 +116,7 @@ func update(pypath string, dbpath string, apikey string, noUpdate bool, user *db
 			}
 			if msg != "ok" {
 				tr := terr.New("Error running the data pipeline:\n" + msg)
-				tr.Fatal()
+				tr.Fatal(tr.Error())
 			}
 			log.Print("Dashboard updated")
 		}

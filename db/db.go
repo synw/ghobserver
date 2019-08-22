@@ -83,30 +83,31 @@ func GetRepos() ([]map[string]string, *terr.Trace) {
 	return res, nil
 }
 
-func GetOrCreateUser(username string) *User {
+func GetOrCreateUser(username string) (*User, *terr.Trace) {
 	user := &User{Name: username}
 	has, err := engine.Exist(user)
 	if err != nil {
 		tr := terr.New(err, "Can not check if user "+username+" exists")
-		tr.Fatal()
+		return user, tr
 	}
 	if has == false {
 		_, err = engine.Insert(user)
 		if err != nil {
 			tr := terr.New(err, "Can not insert user "+username)
-			tr.Fatal()
+			return user, tr
 		}
 	}
 	has, err = engine.Where("name = ?", username).Get(user)
 	if err != nil {
 		tr := terr.New(err, "Can not select user "+username)
-		tr.Fatal()
+		return user, tr
 	}
 	if has == false {
 		tr := terr.New("Can not select user " + username)
-		tr.Fatal()
+		return user, tr
 	}
-	return user
+
+	return user, nil
 }
 
 func SaveFeedUrl(user *User, url string) {
@@ -114,7 +115,7 @@ func SaveFeedUrl(user *User, url string) {
 	if err != nil {
 		tr := terr.New(err)
 		tr = tr.Add("Can not update user " + user.Name)
-		tr.Fatal()
+		tr.Fatal(err.Error)
 	}
 }
 
@@ -136,7 +137,7 @@ func GetActivity() []Activity {
 	err := engine.Desc("id").Limit(30, 0).Find(&acts)
 	if err != nil {
 		tr := terr.New(err, "Can not select last activity")
-		tr.Fatal()
+		tr.Fatal(err.Error)
 	}
 	return acts
 }
@@ -158,7 +159,7 @@ func SaveActivity(activities []Activity, staticPath string) {
 	_, err := engine.Insert(&acToSave)
 	if err != nil {
 		tr := terr.New(err, "Can not save last activity")
-		tr.Fatal()
+		tr.Fatal(err.Error)
 	}
 	// notify
 	iconPath := staticPath + "/img/notification.png"
@@ -203,7 +204,7 @@ func CheckRepos(repos []string, user *User, dbpath string, apikey string) {
 		exists, tr := insertRepoIfNotExists(r, user.Id)
 		if tr != nil {
 			tr := tr.Add("Can not check insert repo " + r)
-			tr.Fatal()
+			tr.Fatal(tr.Error)
 		}
 		if exists == false {
 			log.Print("Updating repository info for " + r)

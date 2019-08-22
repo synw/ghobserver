@@ -2,11 +2,10 @@ package conf
 
 import (
 	"github.com/spf13/viper"
-	"github.com/synw/terr"
 )
 
-func GetConf() (string, string, string, []string, []string, *terr.Trace) {
-	tr := &terr.Trace{}
+// GetConf : read the config file
+func GetConf() (string, string, string, []string, []string, error) {
 	var r []string
 	var exr []string
 	viper.SetConfigName("config")
@@ -15,11 +14,11 @@ func GetConf() (string, string, string, []string, []string, *terr.Trace) {
 	if err != nil {
 		switch err.(type) {
 		case viper.ConfigParseError:
-			tr := terr.New(err)
-			return "", "", "", r, exr, tr
+			//tr := terr.New(err)
+			return "", "", "", r, exr, err
 		default:
-			tr := terr.New("Unable to locate config file")
-			return "", "", "", r, exr, tr
+			//tr := terr.New("Unable to locate config file")
+			return "", "", "", r, exr, err
 		}
 	}
 	user := viper.Get("user").(string)
@@ -33,5 +32,5 @@ func GetConf() (string, string, string, []string, []string, *terr.Trace) {
 	for _, repo := range exrepos {
 		exr = append(exr, repo.(string))
 	}
-	return user, pwd, token, r, exr, tr
+	return user, pwd, token, r, exr, nil
 }

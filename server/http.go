@@ -13,6 +13,7 @@ import (
 
 	"github.com/gorilla/mux"
 	wa "github.com/radovskyb/watcher"
+
 	//"github.com/synw/terr"
 
 	"github.com/synw/ghobserver/db"
@@ -91,7 +92,7 @@ func getRepos() []Repo {
 	repos, tr := db.GetRepos()
 	r := []Repo{}
 	if tr != nil {
-		tr.Fatal()
+		tr.Fatal(tr.Error)
 		return r
 	}
 	for _, repo := range repos {

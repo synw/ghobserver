@@ -49,7 +49,7 @@ func Update(user *db.User, pwd string, staticPath string) {
 	if err != nil {
 		tr := terr.New(err)
 		tr.Add("Can not parse activity feed")
-		tr.Fatal()
+		tr.Fatal(tr.Err)
 	}
 	var activities []db.Activity
 	items := reverse(feed.Items)
@@ -57,7 +57,10 @@ func Update(user *db.User, pwd string, staticPath string) {
 	for _, item := range items {
 		eventType, eventId := getEventIdType(item.GUID)
 		if userInSlice(user, users) == false {
-			user := db.GetOrCreateUser(item.Author.Name)
+			user, tr := db.GetOrCreateUser(item.Author.Name)
+			if tr != nil {
+				tr.Fatal(tr.Error())
+			}
 			users = append(users, user)
 		}
 		activity := db.Activity{
