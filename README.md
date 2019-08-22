@@ -16,6 +16,8 @@ The data is pulled from Github at regular interval from their api. It is stored 
 Install the python module:
 
    ```bash
+   sudo apt-get install libglib2.0-dev
+   pip install dbus-python
    pip install ghobserver
    ```
 
